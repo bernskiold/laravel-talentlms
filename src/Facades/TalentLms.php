@@ -6,7 +6,8 @@ use Bernskiold\LaravelTalentLms\Api\Resources;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static Resources\BrandShare brandShares()
+ * @method static Resources\Courses courses()
+ * @method static Resources\Users users()
  *
  * @see \Bernskiold\LaravelTalentLms\Api\TalentLms
  */
