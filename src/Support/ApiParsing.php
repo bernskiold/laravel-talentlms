@@ -31,13 +31,13 @@ class ApiParsing
         return Carbon::createFromTimestamp($timestamp);
     }
 
-    public static function parseDateTime(mixed $dateTime, string $format = 'd/m/Y, H:i:s'): ?CarbonInterface
+    public static function parseDateTime(mixed $dateTime): ?CarbonInterface
     {
         if (empty($dateTime)) {
             return null;
         }
 
-        return Carbon::createFromFormat($format, $dateTime);
+        return Carbon::parse($format, $dateTime);
     }
 
 }

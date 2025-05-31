@@ -46,7 +46,7 @@ class TalentLmsApiClient
 
     protected function buildEndpointUrl(string $endpoint, array $query): string
     {
-        $baseRequest = "{$this->domain}/api/v{$this->version}/{$endpoint}";
+        $baseRequest = "{$this->domain}/api/v{$this->version}{$endpoint}";
 
         if (empty($query)) {
             return $baseRequest;
