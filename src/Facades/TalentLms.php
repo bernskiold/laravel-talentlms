@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @method static Resources\Courses courses()
  * @method static Resources\Users users()
+ * @method static Resources\Groups groups()
  *
  * @see \Bernskiold\LaravelTalentLms\Api\TalentLms
  */
