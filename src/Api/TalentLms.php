@@ -21,4 +21,9 @@ class TalentLms
         return new Resources\Users($this->apiClient);
     }
 
+    public function groups(): Resources\Groups
+    {
+        return new Resources\Groups($this->apiClient);
+    }
+
 }
