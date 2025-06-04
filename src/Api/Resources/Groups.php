@@ -2,7 +2,6 @@
 
 namespace Bernskiold\LaravelTalentLms\Api\Resources;
 
-use Bernskiold\LaravelTalentLms\Data\ApiResources\UserCourseEnrollment;
 use Bernskiold\LaravelTalentLms\Data\ApiResources\UserGroupConnection;
 use Bernskiold\LaravelTalentLms\Data\ListResponse;
 use Illuminate\Support\Str;
