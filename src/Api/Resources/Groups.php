@@ -2,43 +2,77 @@
 
 namespace Bernskiold\LaravelTalentLms\Api\Resources;
 
-use Bernskiold\LaravelTalentLms\Data\ApiResources\UserGroupConnection;
+use Bernskiold\LaravelTalentLms\Data\ApiResources\Group;
+use Bernskiold\LaravelTalentLms\Data\ApiResources\User;
+use Bernskiold\LaravelTalentLms\Data\ApiResources\UserGroupEnrollment;
 use Bernskiold\LaravelTalentLms\Data\ListResponse;
-use Illuminate\Support\Str;
 
 class Groups extends TalentLmsResource
 {
-
-    public function addUser(int $userId, string $groupKey ): ?UserGroupConnection
+    public function all(): ListResponse
     {
-        $params = [
-            'user_id' => $userId,
-            'group_key' => $groupKey,
-        ];
+        $response = $this->client->get('/groups');
 
-        $response = $this->client->post("/addUserToGroup", $params);
+        return new ListResponse(
+            data: array_map(static function ($row) {
+                return Group::fromResponse($row);
+            }, $response ?? []),
+        );
+    }
 
-        if (!$response) {
+    public function get(int $id): ?Group
+    {
+        $response = $this->client->get("/groups/{$id}");
+
+        if (empty($response)) {
             return null;
         }
 
-        return UserGroupConnection::fromResponse($response);
+        return Group::fromResponse($response);
     }
 
-    public function removeUser(int $userId, string $groupKey): ?UserGroupConnection
+    public function create(string $name, ?string $description = null, ?string $price = null, ?string $key = null, ?int $maxRedemptions = null, ?int $creatorId = null): Group
     {
-        $params = [
-            'user_id' => $userId,
-            'group_key' => $groupKey,
+        $args = [
+            'name' => $name,
+            'description' => $description,
+            'price' => $price,
+            'key' => $key,
+            'max_redemptions' => $maxRedemptions,
+            'creator_id' => $creatorId,
         ];
 
-        $response = $this->client->post("/removeUserFromGroup", $params);
+        // Remove null values from the arguments
+        $args = collect($args)->filter()->all();
 
-        if (!$response) {
-            return null;
-        }
+        $response = $this->client->post('/groups', $args);
 
-        return UserGroupConnection::fromResponse($response);
+        return Group::fromResponse($response);
     }
 
+    public function addUser(Group|string $groupKey, User|int $userId)
+    {
+        $groupKey = $groupKey instanceof Group ? $groupKey->key : $groupKey;
+        $userId = $userId instanceof User ? $userId->id : $userId;
+
+        $response = $this->client->get("/addusertogroup", [
+            'user_id' => $userId,
+            'group_key' => $groupKey,
+        ]);
+
+        return UserGroupEnrollment::fromResponse($response);
+    }
+
+    public function removeUser(Group|string $groupKey, User|int $userId)
+    {
+        $groupKey = $groupKey instanceof Group ? $groupKey->key : $groupKey;
+        $userId = $userId instanceof User ? $userId->id : $userId;
+
+        $response = $this->client->get("/removeusertogroup", [
+            'user_id' => $userId,
+            'group_key' => $groupKey,
+        ]);
+
+        return UserGroupEnrollment::fromResponse($response);
+    }
 }

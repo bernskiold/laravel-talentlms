@@ -5,7 +5,7 @@ namespace Bernskiold\LaravelTalentLms\Data\ApiResources;
 use Bernskiold\LaravelTalentLms\Support\ApiParsing;
 use Carbon\CarbonInterface;
 
-class UserGroupConnection
+class UserGroupEnrollment
 {
 
     public function __construct(
@@ -21,7 +21,7 @@ class UserGroupConnection
         return new self(
             userId: $response->user_id,
             groupId: $response->group_id,
-            groupName: $response->group_name ?? '',
+            groupName: $response->group_name,
         );
     }
 
