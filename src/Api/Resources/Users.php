@@ -4,6 +4,7 @@ namespace Bernskiold\LaravelTalentLms\Api\Resources;
 
 use Bernskiold\LaravelTalentLms\Data\ApiResources\User;
 use Bernskiold\LaravelTalentLms\Data\ListResponse;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Str;
 
 class Users extends TalentLmsResource
@@ -46,27 +47,35 @@ class Users extends TalentLmsResource
 
     public function lookupByEmail(string $email): ?User
     {
-        $response = $this->client->get('/users', [
-            'email' => $email,
-        ]);
+        try {
+            $response = $this->client->get('/users', [
+                'email' => $email,
+            ]);
 
-        if (empty($response)) {
+            if (empty($response)) {
+                return null;
+            }
+
+            return User::fromResponse($response[0]);
+        } catch (RequestException $e) {
             return null;
         }
-
-        return User::fromResponse($response[0]);
     }
 
     public function lookupByUsername(string $username): ?User
     {
-        $response = $this->client->get('/users', [
-            'username' => $username,
-        ]);
+        try {
+            $response = $this->client->get('/users', [
+                'username' => $username,
+            ]);
 
-        if (empty($response)) {
+            if (empty($response)) {
+                return null;
+            }
+
+            return User::fromResponse($response[0]);
+        } catch (RequestException $e) {
             return null;
         }
-
-        return User::fromResponse($response[0]);
     }
 }
