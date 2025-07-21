@@ -44,7 +44,7 @@ class TalentLmsApiClient
             ->object();
     }
 
-    protected function buildEndpointUrl(string $endpoint, array $query): string
+    protected function buildEndpointUrl(string $endpoint, array $query = []): string
     {
         $baseRequest = "{$this->domain}/api/v{$this->version}{$endpoint}";
 
