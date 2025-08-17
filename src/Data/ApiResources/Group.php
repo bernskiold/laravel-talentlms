@@ -36,7 +36,7 @@ class Group
             ownerId: $response->owner_id ?? null,
             belongsToBranch: empty($response->belongs_to_branch) ? null : $response->belongs_to_branch,
             maxRedemptions: empty($response->max_redemptions) && $response->max_redemptions != 0 ? null : $response->max_redemptions,
-            redemptionsSoFar: empty($response->redemptions_sofar) && $response->redemptions_sofar != 0 ? null : $response->redemptions_so_far,
+            redemptionsSoFar: empty($response->redemptions_sofar) && $response->redemptions_sofar != 0 ? null : $response->redemptions_sofar,
             users: collect($response->users ?? [])
                 ->map(fn($user) => UserGroup::fromResponse($user)),
             courses: collect($response->courses ?? [])
