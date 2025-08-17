@@ -59,7 +59,7 @@ class Users extends TalentLmsResource
 
             $response = is_array($response) ? $response[0] : $response;
 
-            return User::fromResponse($response[0]);
+            return User::fromResponse($response);
         } catch (RequestException $e) {
             return null;
         }
