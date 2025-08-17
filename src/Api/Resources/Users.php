@@ -6,6 +6,7 @@ use Bernskiold\LaravelTalentLms\Data\ApiResources\User;
 use Bernskiold\LaravelTalentLms\Data\ListResponse;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Str;
+use function is_array;
 
 class Users extends TalentLmsResource
 {
@@ -34,12 +35,12 @@ class Users extends TalentLmsResource
 
     public function create(string $firstName, string $lastName, string $email, ?string $username = null, ?string $password = null): User
     {
-        $response = $this->client->post('/users', [
+        $response = $this->client->post('/usersignup', [
             'first_name' => $firstName,
             'last_name' => $lastName,
             'email' => $email,
-            'username' => $username ?? $email,
-            'password' => $password ?? Str::random(32),
+            'login' => $username ?? $email,
+            'password' => $password ?? Str::random(30),
         ]);
 
         return User::fromResponse($response);
@@ -55,6 +56,8 @@ class Users extends TalentLmsResource
             if (empty($response)) {
                 return null;
             }
+
+            $response = is_array($response) ? $response[0] : $response;
 
             return User::fromResponse($response[0]);
         } catch (RequestException $e) {
