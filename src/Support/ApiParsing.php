@@ -37,7 +37,7 @@ class ApiParsing
             return null;
         }
 
-        return Carbon::parse($format, $dateTime);
+        return Carbon::parse($dateTime);
     }
 
 }
