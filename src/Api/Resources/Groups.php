@@ -63,14 +63,14 @@ class Groups extends TalentLmsResource
         return UserGroupEnrollment::fromResponse($response);
     }
 
-    public function removeUser(Group|string $groupKey, User|int $userId)
+    public function removeUser(Group|int $groupId, User|int $userId)
     {
-        $groupKey = $groupKey instanceof Group ? $groupKey->key : $groupKey;
+        $groupId = $groupId instanceof Group ? $groupId->id : $groupId;
         $userId = $userId instanceof User ? $userId->id : $userId;
 
-        $response = $this->client->get("/removeusertogroup", [
+        $response = $this->client->get("/removeuserfromgroup", [
             'user_id' => $userId,
-            'group_key' => $groupKey,
+            'group_id' => $groupId,
         ]);
 
         return UserGroupEnrollment::fromResponse($response);
