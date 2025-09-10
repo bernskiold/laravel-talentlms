@@ -7,6 +7,7 @@ use Bernskiold\LaravelTalentLms\Data\ApiResources\User;
 use Bernskiold\LaravelTalentLms\Data\ApiResources\UserCourseEnrollment;
 use Bernskiold\LaravelTalentLms\Data\ListResponse;
 use Illuminate\Support\Str;
+use function array_map;
 use function is_numeric;
 
 class Courses extends TalentLmsResource
@@ -34,8 +35,11 @@ class Courses extends TalentLmsResource
         return Course::fromResponse($response);
     }
 
-    public function enrollUser(int|string $courseIdOrName, int|string $userIdOrEmail, bool $instructor = false): ?UserCourseEnrollment
-    {
+    public function enrollUser(
+        int|string $courseIdOrName,
+        int|string $userIdOrEmail,
+        bool $instructor = false
+    ): ?UserCourseEnrollment {
         $params = [
             'role' => $instructor ? 'instructor' : 'learner',
         ];
@@ -52,7 +56,7 @@ class Courses extends TalentLmsResource
             $params['user_email'] = $userIdOrEmail;
         }
 
-        $response = $this->client->post("/addusertocourse", $params);
+        $response = $this->client->get("/addusertocourse", $params);
 
         if (!$response) {
             return null;
@@ -61,23 +65,14 @@ class Courses extends TalentLmsResource
         return UserCourseEnrollment::fromResponse($response);
     }
 
-    public function unenrollUser(int|string $courseIdOrName, int|string $userIdOrEmail): ?UserCourseEnrollment
+    public function unenrollUser(int|string $courseId, int|string $userId): ?UserCourseEnrollment
     {
-        $params = [];
+        $params = [
+            'course_id' => $courseId,
+            'user_id' => $userId,
+        ];
 
-        if (is_numeric($courseIdOrName)) {
-            $params['course_id'] = $courseIdOrName;
-        } else {
-            $params['course_name'] = $courseIdOrName;
-        }
-
-        if (is_numeric($userIdOrEmail)) {
-            $params['user_id'] = $userIdOrEmail;
-        } else {
-            $params['user_email'] = $userIdOrEmail;
-        }
-
-        $response = $this->client->post("/removeuserfromcourse", $params);
+        $response = $this->client->get("/removeuserfromcourse", $params);
 
         if (!$response) {
             return null;
