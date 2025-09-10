@@ -22,7 +22,7 @@ class Groups extends TalentLmsResource
 
     public function get(int $id): ?Group
     {
-        $response = $this->client->get("/groups/{$id}");
+        $response = $this->client->get("/groups/id:{$id}");
 
         if (empty($response)) {
             return null;

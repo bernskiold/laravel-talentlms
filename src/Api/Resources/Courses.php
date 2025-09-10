@@ -25,7 +25,7 @@ class Courses extends TalentLmsResource
 
     public function get(int $id): ?Course
     {
-        $response = $this->client->get("/courses/{$id}");
+        $response = $this->client->get("/courses/id:{$id}");
 
         if (empty($response)) {
             return null;

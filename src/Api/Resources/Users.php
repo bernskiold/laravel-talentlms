@@ -24,7 +24,7 @@ class Users extends TalentLmsResource
 
     public function get(int $id): ?User
     {
-        $response = $this->client->get("/users/{$id}");
+        $response = $this->client->get("/users/id:{$id}");
 
         if (empty($response)) {
             return null;
