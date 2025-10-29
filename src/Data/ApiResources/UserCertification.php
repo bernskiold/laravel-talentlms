@@ -10,8 +10,8 @@ class UserCertification
 {
 
     public function __construct(
-        public readonly int              $id,
-        public readonly int              $courseId,
+        public readonly int|string       $id,
+        public readonly int|string       $courseId,
         public readonly string           $courseName,
         public readonly ?CarbonInterface $issuedAt = null,
         public readonly ?CarbonInterface $expiresAt = null,
