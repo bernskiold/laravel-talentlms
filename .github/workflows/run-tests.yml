@@ -10,7 +10,7 @@ jobs:
   test:
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         os: [ubuntu-latest]
         php: [8.2, 8.3, 8.4]
@@ -19,12 +19,16 @@ jobs:
         include:
           - laravel: 9.*
             testbench: 7.*
+            pest: 1.*
           - laravel: 10.*
             testbench: 8.*
+            pest: 2.*
           - laravel: 11.*
             testbench: 9.*
+            pest: 2.*
           - laravel: 12.*
             testbench: 10.*
+            pest: 3.*
         exclude:
           - laravel: 9.*
             php: 8.4
@@ -55,7 +59,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" "pestphp/pest:${{ matrix.pest }}" --dev --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: List Installed Dependencies
@@ -87,7 +91,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require "laravel/framework:12.*" "orchestra/testbench:10.*" --no-interaction --no-update
+          composer require "laravel/framework:12.*" "orchestra/testbench:10.*" "pestphp/pest:3.*" --dev --no-interaction --no-update
           composer update --prefer-stable --prefer-dist --no-interaction
 
       - name: List Installed Dependencies
