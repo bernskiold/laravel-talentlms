@@ -7,16 +7,11 @@ use Illuminate\Support\Facades\Http;
 
 class TalentLmsApiClient
 {
-    public PendingRequest $request;
-
     public function __construct(
         protected string $apiKey,
         protected string $domain,
         protected string $version,
-    )
-    {
-        $this->request = Http::withBasicAuth($this->apiKey, '')
-            ->acceptJson();
+    ) {
     }
 
     public static function fromConfig(array $config): self
@@ -28,9 +23,15 @@ class TalentLmsApiClient
         );
     }
 
+    protected function request(): PendingRequest
+    {
+        return Http::withBasicAuth($this->apiKey, '')
+            ->acceptJson();
+    }
+
     public function get(string $endpoint, array $query = []): object|array|null
     {
-        return $this->request
+        return $this->request()
             ->throw()
             ->get($this->buildEndpointUrl($endpoint, $query))
             ->object();
@@ -38,7 +39,7 @@ class TalentLmsApiClient
 
     public function post(string $endpoint, array $data = []): object|array|null
     {
-        return $this->request
+        return $this->request()
             ->throw()
             ->post($this->buildEndpointUrl($endpoint), $data)
             ->object();
@@ -53,7 +54,7 @@ class TalentLmsApiClient
         }
 
         $urlQuery = collect($query)
-            ->map(fn($value, $key) => "{$key}:{$value}")
+            ->map(fn ($value, $key) => "{$key}:{$value}")
             ->implode(',');
 
         return "{$baseRequest}/{$urlQuery}";

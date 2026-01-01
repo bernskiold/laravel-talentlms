@@ -27,6 +27,9 @@ class Group
 
     public static function fromResponse(object $response): self
     {
+        $maxRedemptions = $response->max_redemptions ?? null;
+        $redemptionsSoFar = $response->redemptions_sofar ?? null;
+
         return new self(
             id: $response->id,
             name: $response->name,
@@ -34,13 +37,13 @@ class Group
             key: $response->key ?? null,
             price: $response->price ?? null,
             ownerId: $response->owner_id ?? null,
-            belongsToBranch: empty($response->belongs_to_branch) ? null : $response->belongs_to_branch,
-            maxRedemptions: empty($response->max_redemptions) && $response->max_redemptions != 0 ? null : $response->max_redemptions,
-            redemptionsSoFar: empty($response->redemptions_sofar) && $response->redemptions_sofar != 0 ? null : $response->redemptions_sofar,
+            belongsToBranch: empty($response->belongs_to_branch ?? null) ? null : $response->belongs_to_branch,
+            maxRedemptions: $maxRedemptions === null || ($maxRedemptions === '' && $maxRedemptions !== 0) ? null : (int) $maxRedemptions,
+            redemptionsSoFar: $redemptionsSoFar === null || ($redemptionsSoFar === '' && $redemptionsSoFar !== 0) ? null : (int) $redemptionsSoFar,
             users: collect($response->users ?? [])
-                ->map(fn($user) => UserGroup::fromResponse($user)),
+                ->map(fn ($user) => UserGroup::fromResponse($user)),
             courses: collect($response->courses ?? [])
-                ->map(fn($course) => GroupCourse::fromResponse($course))
+                ->map(fn ($course) => GroupCourse::fromResponse($course))
         );
     }
 }

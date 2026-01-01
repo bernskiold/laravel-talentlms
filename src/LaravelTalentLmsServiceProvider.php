@@ -4,7 +4,6 @@ namespace Bernskiold\LaravelTalentLms;
 
 use Bernskiold\LaravelTalentLms\Api\TalentLms;
 use Bernskiold\LaravelTalentLms\Api\TalentLmsApiClient;
-use Bernskiold\LaravelTalentLms\Commands\PurgeDownloadedFilesCommand;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Support\Facades\RateLimiter;
@@ -18,7 +17,7 @@ class LaravelTalentLmsServiceProvider extends ServiceProvider
     {
         AboutCommand::add('Laravel TalentLMS', fn () => ['Version' => '1.0.0']);
 
-        RateLimiter::for('talentlms', function() {
+        RateLimiter::for('talentlms', function () {
             return Limit::perSecond(200, 5);
         });
 
@@ -33,8 +32,12 @@ class LaravelTalentLmsServiceProvider extends ServiceProvider
             __DIR__.'/../config/talentlms.php', 'talentlms'
         );
 
-        $this->app->bind(TalentLmsApiClient::class, function () {
+        $this->app->singleton(TalentLmsApiClient::class, function () {
             return TalentLmsApiClient::fromConfig(config('talentlms.api'));
+        });
+
+        $this->app->singleton(TalentLms::class, function ($app) {
+            return new TalentLms($app->make(TalentLmsApiClient::class));
         });
 
         $this->app->alias(TalentLms::class, 'laravel-talentlms');

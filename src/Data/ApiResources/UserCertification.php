@@ -28,12 +28,12 @@ class UserCertification
             id: $response->unique_id,
             courseId: $response->course_id,
             courseName: $response->course_name,
-            issuedAt: ApiParsing::parseTimestamp($response->issued_date_timestamp),
-            expiresAt: ApiParsing::parseTimestamp($response->expiration_date_timestamp),
+            issuedAt: ApiParsing::parseTimestamp($response->issued_date_timestamp ?? null),
+            expiresAt: ApiParsing::parseTimestamp($response->expiration_date_timestamp ?? null),
             downloadUrl: $response->download_url ?? null,
             publicUrl: $response->public_url ?? null,
             badges: collect($response->badges ?? [])
-                ->map(fn($badge) => CertificationBadge::fromResponse($badge))
+                ->map(fn ($badge) => CertificationBadge::fromResponse($badge))
         );
     }
 
